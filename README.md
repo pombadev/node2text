@@ -5,8 +5,8 @@
 
 ```bash
 # pipe in
-curl -s 'https://en.wikipedia.org/wiki/Wiki' | node2text '#siteSub'
+curl -s 'https://en.wikipedia.org/wiki/Wiki' | node2text '#siteSub' # From Wikipedia, the free encyclopedia
 
 # extract from path
-node2text '#siteSub' /path/to/file.html
+node2text '#app.title' /path/to/file.html # some text
 ```
