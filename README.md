@@ -4,9 +4,9 @@
 # Usage
 
 ```bash
-	# pipe in
-	curl -s 'https://en.wikipedia.org/wiki/Wiki' | node2text '#siteSub'
+# pipe in
+curl -s 'https://en.wikipedia.org/wiki/Wiki' | node2text '#siteSub'
 
-	# extract from path
-	node2text '#siteSub' /path/to/file.html
+# extract from path
+node2text '#siteSub' /path/to/file.html
 ```

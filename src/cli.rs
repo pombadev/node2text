@@ -46,7 +46,7 @@ impl App {
             match path {
                 Some(path) => fs::read_to_string(&path)?,
                 None => {
-                    eprintln!("Cannot read html, either pipe html or pass file path.\nEg:\n  $ curl -s 'http://example.com/' | {0}\n  $ {0} /path/to/file.html", env!("CARGO_PKG_NAME"));
+                    eprintln!("Cannot read html, either pipe html or pass file path.\nEg:\n  $ curl -s 'https://en.wikipedia.org/wiki/Wiki' | {0} '#siteSub'\n  $ {0} '#siteSub' /path/to/file.html", env!("CARGO_PKG_NAME"));
                     process::exit(1);
                 }
             }
