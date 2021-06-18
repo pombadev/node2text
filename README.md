@@ -1,4 +1,4 @@
-# node2text
+# node2text [![Crates.io](https://img.shields.io/crates/v/node2text)](https://crates.io/crates/node2text) ![License](https://img.shields.io/crates/l/node2text)
 > A tool to extract text from HTML from your terminal.
 
 # Usage
