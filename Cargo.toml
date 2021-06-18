@@ -11,6 +11,7 @@ keywords = ["node2text", "html", "text"]
 categories = ["command-line-utilities"]
 homepage = "https://github.com/pjmp/node2text"
 repository = "https://github.com/pjmp/node2text"
+exclude = ["assets/"]
 
 [dependencies]
 atty = "0.2.14"

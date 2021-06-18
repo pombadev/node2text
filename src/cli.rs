@@ -16,16 +16,15 @@ type Error = Box<dyn error::Error>;
 pub struct App {
     /// CSS Selectors to query <required>
     #[clap(
-        parse(from_str = get_selector),
-        validator = |input| -> Result<(), Error> {
-            Selector::parse(input).map_err(|_| String::from("Invalid selector"))?;
-            Ok(())
-        })
-    ]
-    selector: Selector,
+        long_about = "CSS Selectors to query <required>\nTakes multiple values, eg: node2text '#head','#body','#footer'",
+        validator = selectors_validator
+    )]
+    selectors: Vec<String>,
 
     /// Path to html file <optional>
-    #[clap(validator = |input| -> Result<(), Error> {
+    #[clap(
+        last = true,
+        validator = |input| -> Result<(), Error> {
             PathBuf::from(input).canonicalize()?;
             Ok(())
         })
@@ -33,14 +32,28 @@ pub struct App {
     path: Option<PathBuf>,
 }
 
-fn get_selector(input: &str) -> Selector {
-    // can unwrap because `selector` field is validated
-    Selector::parse(input).unwrap()
+fn selectors_validator(input: &str) -> Result<(), Error> {
+    let invalids = input
+        .split(",")
+        .filter_map(|s| {
+            if Selector::parse(s).is_err() {
+                Some(s)
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>();
+
+    if invalids.is_empty() {
+        Ok(())
+    } else {
+        Err(format!("Failed parsing selector(s): {}", invalids.join(", ")).into())
+    }
 }
 
 impl App {
     pub fn run() -> Result<(), Error> {
-        let Self { path, selector } = Self::parse();
+        let Self { path, selectors } = Self::parse();
 
         let html = if is(Stream::Stdin) {
             match path {
@@ -62,25 +75,41 @@ impl App {
             data
         };
 
-        let all_text = Html::parse_document(&html).select(&selector).fold(
-            String::new(),
-            |mut text, element| {
-                let inner_text = element.text().fold(String::new(), |mut acc, curr| {
-                    acc.push_str(curr);
-                    acc
-                });
+        let all_text = selectors
+            .iter()
+            .filter_map(|input| Selector::parse(input).ok())
+            .fold(String::new(), |mut all, selector| {
+                let text_for_selector = Html::parse_document(&html).select(&selector).fold(
+                    String::new(),
+                    |mut text, element| {
+                        let inner_text = element.text().fold(String::new(), |mut acc, curr| {
+                            acc.push_str(curr);
+                            acc
+                        });
 
-                text.push_str(&inner_text);
+                        text.push_str(&inner_text);
 
-                text
-            },
-        );
+                        text
+                    },
+                );
+
+                all.push_str(&text_for_selector);
+
+                all
+            });
+
+        let all_text = all_text.trim();
+
+        if all_text.is_empty() {
+            // selector was probably not found in the html, notify user
+            process::exit(1);
+        }
 
         // writing to stdout this way instead of `println!`, to prevent `Broken pipe (os error 32)`
         // error when the out is piping in linux (not sure in other os
         stdout()
             .lock()
-            .write_all(format!("{}\n", all_text.trim()).as_bytes())?;
+            .write_all(format!("{}\n", all_text).as_bytes())?;
 
         Ok(())
     }
