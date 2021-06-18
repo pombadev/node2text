@@ -1,0 +1,18 @@
+[package]
+name = "node2text"
+version = "0.1.0"
+authors = ["pjmp <11157420+pjmp@users.noreply.github.com>"]
+edition = "2018"
+description = "Parse HTML in your terminal"
+resolver = "2"
+readme = "README.md"
+license = "MIT"
+keywords = ["node2text", "html", "text"]
+categories = ["command-line-utilities"]
+homepage = "https://github.com/pjmp/node2text"
+repository = "https://github.com/pjmp/node2text"
+
+[dependencies]
+atty = "0.2.14"
+scraper = "0.12.0"
+clap = "3.0.0-beta.2"
