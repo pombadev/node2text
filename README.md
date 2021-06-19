@@ -23,6 +23,16 @@ Hugely inspired by [pup](https://github.com/ericchiang/pup).
 
 [![demo](./assets/demo.svg)](./assets/demo.svg)
 
+# Installation
+
+If you have rust toolchain installed, `node2text` is available on [crates.io](https://crates.io/crates/node2text), if you don't have rust toolchain installed, please install rust by going to the [official website](https://www.rust-lang.org/tools/install).
+
+Run
+
+```bash
+cargo install node2text
+```
+
 # Note
 
 Piping will always take precedence even if `<path>` is provided.
