@@ -14,6 +14,7 @@ node2text '#app.title' /path/to/file.html
 ```
 
 # Motivation
+
 When I reinstall my machine, I want to automate my install process. Usually it involves quickly grabbing snippet from the internet and writing it to file, this tool aims to help script it.
 
 Hugely inspired by [pup](https://github.com/ericchiang/pup).
@@ -21,3 +22,23 @@ Hugely inspired by [pup](https://github.com/ericchiang/pup).
 # Demo
 
 [![demo](./assets/demo.svg)](./assets/demo.svg)
+
+# Note
+
+Piping will always take precedence even if `<path>` is provided.
+
+# Comparison with [pup](https://github.com/ericchiang/pup):
+
+`node2text`
+- Selectors are purely CSS selectors, no dsl
+- Takes html, spits out text
+- Written in rust programming language
+- Less features than `pup`
+- Outputs are not escaped
+
+`pup`
+- Selectors are CSS selectors plus dsl
+- Takes html, spits out html, json, html
+- Written in go programming language
+- Has many features, visit their github page to know more
+- Outputs are escaped

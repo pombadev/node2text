@@ -12,7 +12,11 @@ use scraper::{Html, Selector};
 type Error = Box<dyn error::Error>;
 
 #[derive(Clap, Debug)]
-#[clap(about, version)]
+#[clap(
+    about,
+    version,
+    after_help = "Note: Piping will always take precedence even if `<path>` is provided."
+)]
 pub struct App {
     /// CSS Selectors to query <required>
     #[clap(
@@ -64,8 +68,7 @@ impl App {
                 }
             }
         } else {
-            // using functional style eg: stdin().lock().lines()
-            // doesn't preserve input's formatting
+            // using functional style eg: stdin().lock().lines() doesn't preserve input's formatting
             let mut data = String::new();
             let stdin = stdin();
             let mut handle = stdin.lock();
@@ -101,12 +104,12 @@ impl App {
         let all_text = all_text.trim();
 
         if all_text.is_empty() {
-            // selector was probably not found in the html, notify user
+            // selector was probably not found in the html, notify user via exit code
             process::exit(1);
         }
 
         // writing to stdout this way instead of `println!`, to prevent `Broken pipe (os error 32)`
-        // error when the out is piping in linux (not sure in other os
+        // error when the output is piped out in linux (not sure in other os)
         stdout()
             .lock()
             .write_all(format!("{}\n", all_text).as_bytes())?;
