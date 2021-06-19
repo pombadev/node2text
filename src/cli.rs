@@ -20,7 +20,7 @@ type Error = Box<dyn error::Error>;
 pub struct App {
     /// CSS Selectors to query <required>
     #[clap(
-        long_about = "CSS Selectors to query <required>\nTakes multiple values, eg: node2text '#head','#body','#footer'",
+        long_about = "CSS Selectors to query <required>\nCan take multiple values, eg: node2text '#head','#body','#footer'",
         validator = selectors_validator
     )]
     selectors: Vec<String>,
@@ -78,28 +78,27 @@ impl App {
             data
         };
 
-        let all_text = selectors
-            .iter()
-            .filter_map(|input| Selector::parse(input).ok())
-            .fold(String::new(), |mut all, selector| {
-                let text_for_selector = Html::parse_document(&html).select(&selector).fold(
-                    String::new(),
-                    |mut text, element| {
-                        let inner_text = element.text().fold(String::new(), |mut acc, curr| {
-                            acc.push_str(curr);
-                            acc
-                        });
+        let all_text = selectors.iter().fold(String::new(), |mut all, input| {
+            // can unwrap as it's validated beforehand
+            let selector = Selector::parse(input).unwrap();
+            let text_for_selector = Html::parse_document(&html).select(&selector).fold(
+                String::new(),
+                |mut text, element| {
+                    let inner_text = element.text().fold(String::new(), |mut acc, curr| {
+                        acc.push_str(curr);
+                        acc
+                    });
 
-                        text.push_str(&inner_text);
+                    text.push_str(&inner_text);
 
-                        text
-                    },
-                );
+                    text
+                },
+            );
 
-                all.push_str(&text_for_selector);
+            all.push_str(&text_for_selector);
 
-                all
-            });
+            all
+        });
 
         let all_text = all_text.trim();
 
