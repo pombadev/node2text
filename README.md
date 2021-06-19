@@ -48,7 +48,7 @@ Piping will always take precedence even if `<path>` is provided.
 
 `pup`
 - Selectors are CSS selectors plus dsl
-- Takes html, spits out html, json, html
+- Takes html, spits out text, json, html
 - Written in go programming language
 - Has many features, visit their github page to know more
 - Outputs are escaped
